@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import XSvg from "../../../components/svgs/X";
 
-import { MdOutlineMail } from "react-icons/md";
+import { MdOutlinePerson } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +28,7 @@ const LoginPage = () => {
   } = useMutation({
     mutationFn: async ({ username, password }) => {
       try {
-        const res = await fetch("/api/auth/login", {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -38,6 +41,14 @@ const LoginPage = () => {
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
+
+        // Set the JWT token as a cookie
+        Cookies.set("chocosxclone", data.token, {
+          expires: 15, // 15 days
+          httpOnly: import.meta.env.NODE_ENV !== "development",
+          secure: import.meta.env.NODE_ENV !== "development",
+          sameSite: "strict",
+        });
       } catch (error) {
         throw new Error(error);
       }
@@ -70,7 +81,7 @@ const LoginPage = () => {
           <div className="flex flex-col gap-2">
             <p className="text-base flex">Username</p>
             <label className="input input-bordered rounded-lg flex items-center gap-2">
-              <MdOutlineMail />
+              <MdOutlinePerson />
               <input
                 type="text"
                 className="grow"
@@ -78,7 +89,7 @@ const LoginPage = () => {
                 name="username"
                 onChange={handleInputChange}
                 value={formData.username}
-                autoComplete="username"
+                autoComplete="username webauthn"
               />
             </label>
           </div>

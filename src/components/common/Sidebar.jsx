@@ -7,20 +7,14 @@ import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
   const { mutate: logout } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await fetch("/api/auth/logout", {
-          method: "POST",
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
+        Cookies.remove("chocosxclone");
       } catch (error) {
         throw new Error(error);
       }
@@ -71,15 +65,14 @@ const Sidebar = () => {
 
           {authUser && (
             <div className="mt-auto flex flex-col mb-4 gap-2">
-              <button className="flex gap-2 items-center justify-center md:justify-between transition-all duration-300 hover:bg-[#181818] py-4 px-2 rounded-lg md:rounded-full w-full">
+              <button
+                className="flex gap-2 items-center justify-center md:justify-between transition-all duration-300 hover:bg-[#181818] py-4 px-2 rounded-lg md:rounded-full w-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  logout();
+                }}>
                 <span className="hidden md:block">Logout </span>
-                <BiLogOut
-                  className="w-5 h-5 cursor-pointer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    logout();
-                  }}
-                />
+                <BiLogOut className="w-5 h-5 cursor-pointer" />
               </button>
 
               <Link

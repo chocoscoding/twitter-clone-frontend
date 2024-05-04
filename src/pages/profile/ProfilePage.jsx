@@ -14,8 +14,12 @@ import { formatMemberSinceDate } from "../../utils/date";
 
 import useFollow from "../../hooks/useFollow";
 import useUpdateUserProfile from "../../hooks/useUpdateUserProfile";
+import Cookies from "js-cookie";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProfilePage = () => {
+  const token = Cookies.get("chocosxclone");
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
   const [feedType, setFeedType] = useState("posts");
@@ -37,7 +41,11 @@ const ProfilePage = () => {
     queryKey: ["userProfile"],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/users/profile/${username}`);
+        const res = await fetch(`${API_URL}/api/users/profile/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");

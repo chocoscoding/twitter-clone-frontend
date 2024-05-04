@@ -10,8 +10,11 @@ import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date";
+import Cookies from "js-cookie";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Post = ({ post }) => {
+  const token = Cookies.get("chocosxclone");
   const [comment, setComment] = useState("");
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
@@ -25,8 +28,11 @@ const Post = ({ post }) => {
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await fetch(`/api/posts/${post._id}`, {
+        const res = await fetch(`${API_URL}/api/posts/${post._id}`, {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await res.json();
 
@@ -47,8 +53,11 @@ const Post = ({ post }) => {
   const { mutate: likePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await fetch(`/api/posts/like/${post._id}`, {
+        const res = await fetch(`${API_URL}/api/posts/like/${post._id}`, {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await res.json();
         if (!res.ok) {
@@ -81,10 +90,11 @@ const Post = ({ post }) => {
   const { mutate: commentPost, isPending: isCommenting } = useMutation({
     mutationFn: async () => {
       try {
-        const res = await fetch(`/api/posts/comment/${post._id}`, {
+        const res = await fetch(`${API_URL}/api/posts/comment/${post._id}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ text: comment }),
         });
