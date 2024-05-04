@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
 					changeOrigin: true,
 				},
 			},
+			cors: false,
 		},
 	};
 });
