@@ -45,7 +45,6 @@ const LoginPage = () => {
         // Set the JWT token as a cookie
         Cookies.set("chocosxclone", data.token, {
           expires: 15, // 15 days
-          httpOnly: import.meta.env.NODE_ENV !== "development",
           secure: import.meta.env.NODE_ENV !== "development",
           sameSite: "strict",
         });

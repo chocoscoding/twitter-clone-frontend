@@ -39,7 +39,6 @@ const SignUpPage = () => {
 
         Cookies.set("chocosxclone", data.token, {
           expires: 15, // 15 days
-          httpOnly: import.meta.env.NODE_ENV !== "development",
           secure: import.meta.env.NODE_ENV !== "development",
           sameSite: "strict",
         });
