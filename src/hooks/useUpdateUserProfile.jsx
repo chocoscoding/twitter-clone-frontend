@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useUpdateUserProfile = () => {
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const { mutateAsync: updateProfile, isPending: isUpdatingProfile } = useMutation({
     mutationFn: async (formData) => {
       try {
@@ -27,7 +28,8 @@ const useUpdateUserProfile = () => {
         throw new Error(error.message);
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      navigate(`/profile/${data.username}`);
       toast.success("Profile updated successfully");
       Promise.all([
         queryClient.invalidateQueries({ queryKey: ["authUser"] }),
