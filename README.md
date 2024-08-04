@@ -21,7 +21,6 @@ Visit here 👉 [live website](https://chocos-x-clone.vercel.app/)
 
 - ReactJS
 - Javascript
-- Prisma
 - Vercel
 - Tailwind
 - ReactQuery
